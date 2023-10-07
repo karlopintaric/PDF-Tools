@@ -1,0 +1,5 @@
+.
+pymupdf
+transformers
+opencv-python
+pytesseract

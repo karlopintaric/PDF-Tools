@@ -1,0 +1,12 @@
+.vscode/
+build/
+
+*.egg-info
+data/
+test_files/
+
+venv/
+
+notebooks/
+
+__pycache__
