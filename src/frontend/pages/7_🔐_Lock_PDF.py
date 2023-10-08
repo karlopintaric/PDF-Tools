@@ -3,7 +3,7 @@ import io
 import fitz
 import streamlit as st
 
-from frontend.pages.ui_backend import interface
+from src.frontend.pages.ui_backend import interface
 from src.tools.pdf import open_pdf
 
 perms = {
