@@ -3,7 +3,12 @@ import streamlit as st
 
 
 def init_page(title, icon):
-    st.set_page_config(page_title=title, page_icon=icon, layout="wide")
+    st.set_page_config(
+        page_title=title,
+        page_icon=icon,
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
     st.title(f"{title} {icon}")
 
 
