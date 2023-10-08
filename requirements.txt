@@ -4,3 +4,5 @@ transformers
 opencv-python-headless
 pytesseract
 openai
+mitosheet
+llama-index
