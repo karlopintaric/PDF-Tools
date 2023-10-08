@@ -7,4 +7,6 @@ pytesseract
 openai
 mitosheet
 llama-index
+timm
+pypdf
 -e .
