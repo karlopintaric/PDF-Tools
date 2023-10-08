@@ -1,6 +1,7 @@
 import streamlit as st
-from src.objects.documents import PdfDocument
+
 from frontend.pages.ui_backend import interface
+from src.objects.documents import PdfDocument
 
 
 def main():

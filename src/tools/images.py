@@ -2,10 +2,9 @@ import io
 from pathlib import Path
 from typing import List, Optional
 
+import cv2
 import fitz
 import numpy as np
-import cv2
-import pytesseract
 
 from src.objects.validations import ImageSource, get_image_format
 
@@ -52,15 +51,12 @@ def open_image_as_document(src: ImageSource) -> fitz.Document:
 
     elif isinstance(src, (io.BytesIO, bytes)):
         try:
-            filename = (
-                src.name
-                if isinstance(src, io.BytesIO) and hasattr(src, "name")
-                else None
-            )
+            if isinstance(src, io.BytesIO):
+                filename = src.name if hasattr(src, "name") else None
+                src = src.getvalue()
+
             img_format = get_image_format(src) if not filename else None
-            doc = fitz.open(
-                filename=filename, filetype=img_format, stream=src.getvalue()
-            )
+            doc = fitz.open(filename=filename, filetype=img_format, stream=src)
 
         except Exception as e:
             raise ValueError(
@@ -135,9 +131,3 @@ def pdf_to_images(
             page_images.append(img)
 
     return page_images
-
-
-# def ocr_image(img: np.ndarray) -> dict:
-#     d = pytesseract.image_to_data(
-#             row, config=custom_config, output_type=Output.DICT
-#         )

@@ -1,7 +1,9 @@
-import streamlit as st
-from src.tools.pdf import merge_docs
 import io
+
+import streamlit as st
+
 from frontend.pages.ui_backend import interface
+from src.tools.pdf import merge_docs
 
 
 def main():

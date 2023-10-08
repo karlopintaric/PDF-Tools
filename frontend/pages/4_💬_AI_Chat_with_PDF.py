@@ -1,13 +1,18 @@
-import streamlit as st
-from llama_index import VectorStoreIndex, ServiceContext, Document
-from llama_index.llms import OpenAI
-import openai
-from llama_index import SimpleDirectoryReader
 import os
-from src.tools.pdf import open_pdf
 import time
-from frontend.pages.ui_backend import interface
 import uuid
+
+import openai
+import streamlit as st
+from llama_index import (
+    ServiceContext,
+    SimpleDirectoryReader,
+    VectorStoreIndex,
+)
+from llama_index.llms import OpenAI
+
+from frontend.pages.ui_backend import interface
+from src.tools.pdf import open_pdf
 
 
 def main():
@@ -57,15 +62,16 @@ def main():
 
 def delete_files(user_id, dir_path="./data"):
     save_path = os.path.join(dir_path, user_id)
-    
+
     if os.path.exists(save_path):
         for filename in os.listdir(save_path):
             file_path = os.path.join(save_path, filename)
             os.remove(file_path)
 
+
 def clear_chat():
     if "messages" in st.session_state:
-            del st.session_state.messages
+        del st.session_state.messages
 
 
 def check_api_key():
@@ -113,7 +119,7 @@ def make_test_call(api_key):
 
 def save_files_locally(files, user_id, dir_path):
     save_path = os.path.join(dir_path, user_id)
-    
+
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 

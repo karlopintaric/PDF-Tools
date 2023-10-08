@@ -1,17 +1,17 @@
+from collections import defaultdict
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import List, Optional, Iterable, Dict
-from collections import defaultdict
+from typing import Iterable, List, Optional
 
 import cv2
 import fitz
 import matplotlib.pyplot as plt
 import numpy as np
 
+from src.objects.misc import BBox
 from src.objects.validations import ImageSource, PdfSource, is_image_array
 from src.tools.images import images_to_pdf, pdf_to_images, read_img
 from src.tools.pdf import merge_docs, open_pdf
-from src.objects.misc import BBox
 
 
 @dataclass
@@ -21,11 +21,15 @@ class DocumentImage:
 
     :param img: The image data as a NumPy array.
     :type img: numpy.ndarray
-    :param page_num: The page number from which the image was extracted, \
-        defaults to 0.
+    :param page_num: The page number from which the image was extracted, defaults to 0.
     :type page_num: int, optional
     :param size: The size of the image, initialized automatically.
     :type size: numpy.ndarray
+    :param dpi: The dots per inch (DPI) of the image, defaults to None.
+    :type dpi: int, optional
+
+    :raises ValueError: If the input array is not a valid image array or \
+        if image is extracted from document without providing DPI.
     """
 
     img: np.ndarray
@@ -48,7 +52,14 @@ class DocumentImage:
         self.size = self.img.shape[:2]
 
     @cached_property
-    def word_positions(self):
+    def word_positions(self) -> dict | None:
+        """
+        Calculate the positions of words in the image.
+
+        :return: Dictionary containing word positions.
+        :rtype: dict | None
+        """
+
         if self.page_text is None:
             return None
 
@@ -59,7 +70,7 @@ class DocumentImage:
 
         scale_factor = self.dpi / 72
 
-        d = {"box": [], "text": []}
+        d: dict = {"box": [], "text": []}
         for word in words:
             xmin, ymin, xmax, ymax = [
                 int(round(p * scale_factor)) for p in word[:4]
@@ -70,12 +81,22 @@ class DocumentImage:
 
         return d
 
-    def words_inside_box(self, box: BBox) -> dict:
+    def words_inside_box(self, box: BBox) -> dict | None:
+        """
+        Get words that are inside a specified bounding box.
+
+        :param box: The bounding box.
+        :type box: BBox
+
+        :return: Dictionary containing words and their positions inside the box.
+        :rtype: dict | None
+        """
+
         if self.word_positions is None:
             return None
 
-        boxes = self.word_positions.get('box')
-        words = self.word_positions.get('text')
+        boxes = self.word_positions.get("box")
+        words = self.word_positions.get("text")
 
         if boxes is None or words is None:
             return None
@@ -84,8 +105,8 @@ class DocumentImage:
 
         for word_box, word in zip(boxes, words):
             if word_box in box:
-                words_inside['box'].append(word_box - box)
-                words_inside['text'].append(word)
+                words_inside["box"].append(word_box - box)
+                words_inside["text"].append(word)
 
         return dict(words_inside)
 
@@ -188,11 +209,13 @@ class PdfDocument:
 
         :param src: The source of the PDF document.
         :type src: PdfSource
-        :param image_list: A list of image sources \
-            to be used for PDF creation, defaults to None.
-        :type image_list: List[ImageSource], optional
+        :param dpi: The resolution in dots per inch (DPI) for images, defaults to 300.
+        :type dpi: int, optional
+        :param images: A list of image sources to be used for PDF creation, \
+            defaults to None.
+        :type images: Optional[Iterable[np.ndarray]], optional
         :param pages: A list of page numbers to extract, defaults to None.
-        :type pages: List[int], optional
+        :type pages: Optional[List[int]], optional
         """
 
         self.doc = src
@@ -223,7 +246,7 @@ class PdfDocument:
             PageImage(img=img, page_text=text, page_num=i, dpi=self.dpi)
             for i, (img, text) in enumerate(zip(images, texts))
         )
-    
+
     @page_images.setter
     def page_images(self, page_images):
         self._page_images = page_images

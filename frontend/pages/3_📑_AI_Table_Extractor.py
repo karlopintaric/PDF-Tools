@@ -1,11 +1,13 @@
-import streamlit as st
-from src.extraction.extractors import TableExtractor, TableDataExtractor
-from src.objects.documents import PdfDocument
-from frontend.pages.ui_backend import interface
+import time
+
 import cv2
 import numpy as np
+import streamlit as st
 from mitosheet.streamlit.v1 import spreadsheet
-import time
+
+from frontend.pages.ui_backend import interface
+from src.extraction.extractors import TableDataExtractor, TableExtractor
+from src.objects.documents import PdfDocument
 
 
 # Main function
@@ -16,7 +18,7 @@ def main():
     # Upload a PDF file
     file = interface.upload_pdf_file(on_change=new_file)
 
-    if 'new' not in st.session_state:
+    if "new" not in st.session_state:
         st.session_state.new = True
 
     if file:
@@ -82,10 +84,8 @@ def edit_spreadsheets():
 
 def display_tables(file, table_extractor, data_extractor):
     container = st.container()
-    data_view = container.toggle(
-            "Extract data", disabled=st.session_state.new
-        )
-    
+    data_view = container.toggle("Extract data", disabled=st.session_state.new)
+
     # Extract tables from the uploaded PDF
     tables = extract_tables(file, table_extractor)
 
@@ -108,8 +108,7 @@ def display_tables(file, table_extractor, data_extractor):
             display_tables_data(tables_data)
 
         with container:
-                edit_spreadsheets()
-    
+            edit_spreadsheets()
 
 
 # Function to display tables and convert to data_view
@@ -144,14 +143,13 @@ def display_tables_images(tables):
                     disabled=st.session_state.new,
                 )
 
-
                 if st.button("Remove table", key=f"remove_{fname}"):
                     if "data_tables" in st.session_state:
                         st.session_state.data_tables.pop(fname, None)
-                    
+
                     else:
                         st.session_state.tables.pop(i)
-                    
+
                     st.experimental_rerun()
 
 

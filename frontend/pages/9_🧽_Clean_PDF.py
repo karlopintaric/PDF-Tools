@@ -1,11 +1,13 @@
-import streamlit as st
-from src.tools.pdf import open_pdf
 import io
+
+import streamlit as st
+
 from frontend.pages.ui_backend import interface
+from src.tools.pdf import open_pdf
 
 
 def main():
-    interface.init_page('Clean PDF file', icon='🧽')
+    interface.init_page("Clean PDF file", icon="🧽")
     st.write(
         """Removes potentially malicious code from PDF files, \
         resets form fields and reduces file size if possible"""
@@ -15,7 +17,7 @@ def main():
     file = interface.upload_pdf_file()
 
     if file:
-        fname = file.name.rstrip('.pdf')
+        fname = file.name.rstrip(".pdf")
 
         st.write(fname)
         sanitize_action = st.button("Clean file")
@@ -24,12 +26,12 @@ def main():
             cleaned_file = clean_pdf(file)
 
             st.download_button(
-            "Download cleaned PDF",
-            cleaned_file,
-            file_name=f"{fname}_cleaned",
-            mime='application/pdf'
-        )
-            
+                "Download cleaned PDF",
+                cleaned_file,
+                file_name=f"{fname}_cleaned",
+                mime="application/pdf",
+            )
+
 
 def clean_pdf(file):
     with st.spinner("Cleaning PDF..."):
@@ -37,7 +39,9 @@ def clean_pdf(file):
 
         pdf.scrub()
         cleaned_file = io.BytesIO()
-        pdf.save(cleaned_file, garbage=4, deflate=True, clean=True, linear=True)
+        pdf.save(
+            cleaned_file, garbage=4, deflate=True, clean=True, linear=True
+        )
         st.success("PDF cleaned successfully!")
 
     return cleaned_file
