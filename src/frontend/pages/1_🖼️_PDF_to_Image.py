@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.frontend.pages.ui_backend import interface
+from src.frontend.ui_backend import interface
 from src.objects.documents import PdfDocument
 
 

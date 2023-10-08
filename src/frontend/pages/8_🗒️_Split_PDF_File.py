@@ -2,7 +2,7 @@ import io
 
 import streamlit as st
 
-from src.frontend.pages.ui_backend import interface
+from src.frontend.ui_backend import interface
 from src.tools.pdf import open_pdf, split_doc
 
 

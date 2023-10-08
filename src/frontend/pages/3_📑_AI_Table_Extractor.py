@@ -5,7 +5,7 @@ import numpy as np
 import streamlit as st
 from mitosheet.streamlit.v1 import spreadsheet
 
-from src.frontend.pages.ui_backend import interface
+from src.frontend.ui_backend import interface
 from src.extraction.extractors import TableDataExtractor, TableExtractor
 from src.objects.documents import PdfDocument
 
