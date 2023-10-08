@@ -15,6 +15,8 @@ def main():
     interface.init_page(title="PDF Table Extractor", icon="📑")
     table_extractor, data_extractor = init_extractors(batch_size=1)
 
+    check_password()
+
     # Upload a PDF file
     file = interface.upload_pdf_file(on_change=new_file)
 
@@ -34,6 +36,25 @@ def init_extractors(batch_size):
     return TableExtractor(batch_size=batch_size), TableDataExtractor(
         batch_size=batch_size
     )
+
+def check_password():
+    if not st.session_state.get('auth'):
+        st.write('This app has limited access due to high memory usage. \
+                 You can always use it locally by forking my repository')
+        password = st.text_input(
+            "Enter master password",
+            help="Only certain people can access this",
+            type="password",
+        )
+        
+        if password:
+            if st.secrets.admin_pass == password:
+                st.session_state.auth = True
+                st.experimental_rerun()
+            else:
+                st.error('Wrong password', icon='🚨')
+        
+        st.stop()
 
 
 def new_file():
