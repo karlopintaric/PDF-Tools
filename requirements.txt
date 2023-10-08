@@ -1,5 +1,6 @@
 .
 pymupdf
 transformers
-opencv-python
+opencv-python-headless
 pytesseract
+openai
