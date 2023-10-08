@@ -13,7 +13,7 @@ from src.objects.documents import PdfDocument
 # Main function
 def main():
     interface.init_page(title="PDF Table Extractor", icon="📑")
-    table_extractor, data_extractor = init_extractors()
+    table_extractor, data_extractor = init_extractors(batch_size=1)
 
     # Upload a PDF file
     file = interface.upload_pdf_file(on_change=new_file)
@@ -30,8 +30,10 @@ def main():
 
 # Function to create table extractors
 @st.cache_resource(show_spinner="Loading models...")
-def init_extractors():
-    return TableExtractor(), TableDataExtractor()
+def init_extractors(batch_size):
+    return TableExtractor(batch_size=batch_size), TableDataExtractor(
+        batch_size=batch_size
+    )
 
 
 def new_file():
