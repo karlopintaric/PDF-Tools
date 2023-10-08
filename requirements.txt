@@ -9,4 +9,5 @@ mitosheet
 llama-index
 timm
 pypdf
+tabulate
 -e .
