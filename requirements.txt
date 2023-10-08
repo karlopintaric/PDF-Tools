@@ -1,3 +1,5 @@
+torch
+matplotlib
 pymupdf
 transformers
 opencv-python-headless
